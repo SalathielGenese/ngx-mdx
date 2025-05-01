@@ -1,15 +1,16 @@
+import { MdxService } from './mdx.service';
 import { Component } from '@angular/core';
 
 @Component({
   selector: '.ngx-jokeaside-mdx',
-  imports: [],
   template: `
     <p>
-      mdx works!
+      {{ mdxService.sayItWorks("mdx") }}
     </p>
   `,
   styles: ``
 })
 export class MdxComponent {
-
+  constructor(protected readonly mdxService: MdxService) {
+  }
 }
