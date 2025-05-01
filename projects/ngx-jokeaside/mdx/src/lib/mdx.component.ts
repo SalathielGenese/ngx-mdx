@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-mdx',
+  selector: '.ngx-jokeaside-mdx',
   imports: [],
   template: `
     <p>
