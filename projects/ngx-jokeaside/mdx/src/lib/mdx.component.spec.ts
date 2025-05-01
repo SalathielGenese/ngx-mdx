@@ -1,21 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MdxComponent } from './mdx.component';
-import {Component} from '@angular/core';
+import {MdxComponent} from './mdx.component';
+import {Component, OnInit} from '@angular/core';
 
-@Component({
-  selector: 'with-mdx',
-  imports: [MdxComponent],
-  template: `<article ngx-jokeaside-mdx>
-        # mdx works!
-      </article>`
-})
-export class WithMdxComponent {
-}
 
 describe('MdxComponent', () => {
-  let component: MdxComponent;
-  let fixture: ComponentFixture<MdxComponent>;
+  let component: WithMdxComponent;
+  let fixture: ComponentFixture<WithMdxComponent>;
+
+  @Component({
+    selector: 'with-mdx',
+    imports: [MdxComponent],
+    template: `
+      <article ngx-jokeaside-mdx>
+        # {{ name }} works!
+      </article>`
+  })
+  class WithMdxComponent implements OnInit {
+    name = 'mdx';
+
+    ngOnInit() {
+      setTimeout(() => this.name = 'MDX', 3_000);
+    }
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({imports: [WithMdxComponent, MdxComponent]}).compileComponents();
@@ -28,7 +35,10 @@ describe('MdxComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('template should contain "mdx works" text', () => {
+  it('template should contain "mdx works" text', async () => {
     expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain(' # mdx works! ');
+    await new Promise(resolve => setTimeout(resolve, 3_000));
+    fixture.detectChanges();
+    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain(' # MDX works! ');
   });
 });
