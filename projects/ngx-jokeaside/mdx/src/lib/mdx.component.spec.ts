@@ -20,4 +20,16 @@ describe('MdxComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('template should contain one child', () => {
+    expect((fixture.elementRef.nativeElement as HTMLElement).children.length).toBe(1);
+  });
+
+  it('template should contain one <p> child', () => {
+    expect((fixture.elementRef.nativeElement as HTMLElement).children.item(0)?.tagName).toBe('P');
+  });
+
+  it('template should contain one <p> child with "mdx works" text', () => {
+    expect((fixture.elementRef.nativeElement as HTMLElement).children.item(0)?.innerHTML).toBe(' mdx works! ');
+  });
 });
