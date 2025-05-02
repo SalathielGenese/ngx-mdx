@@ -5,10 +5,14 @@ import dedent from 'dedent';
 
 @Component({
   selector: '[ngx-jokeaside-mdx], ngx-jokeaside-mdx',
-  template: `<ng-content></ng-content>`,
+  template: `
+    <ng-content></ng-content>`,
 })
 export class MdxComponent implements AfterViewInit, AfterViewChecked {
-  constructor(private readonly elRef: ElementRef<HTMLElement>) {
+  readonly #synthetics = new Set<Node>();
+
+  constructor(private readonly renderer: Renderer2,
+              private readonly elRef: ElementRef<HTMLElement>) {
   }
 
   ngAfterViewInit() {
@@ -16,24 +20,24 @@ export class MdxComponent implements AfterViewInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    this.#processMarkdown();
+    this.#processMarkdown(true);
   }
 
-  #processMarkdown() {
-    let node: null | Node = null;
-    const walker = document.createTreeWalker(
-      this.elRef.nativeElement,
-      NodeFilter.SHOW_ALL,
-      node => 3 === node.nodeType
-        ? NodeFilter.FILTER_ACCEPT
-        : NodeFilter.FILTER_SKIP);
+  #processMarkdown(trim = false) {
+    for (const synthetic of new Set(this.#synthetics)) {
+      synthetic.parentNode?.removeChild(synthetic);
+      this.#synthetics.delete(synthetic);
+    }
 
-    while (node = walker.nextNode()) {
-      const source = node.textContent ?? '';
-      const cleared = dedent(source);
-      const parsed = parse(cleared) as string;
-      node.textContent = '';
-      this.elRef.nativeElement.insertAdjacentHTML('beforeend', parsed);
+    for (const node of this.elRef.nativeElement.childNodes) {
+      if (3 !== node.nodeType) return;
+      const temporary: HTMLDivElement = this.renderer.createElement('div');
+      this.renderer.setProperty(temporary, 'innerHTML', `${parse(dedent(node.textContent ?? ''))}`);
+      temporary.childNodes.forEach(child => {
+        const ref = node?.parentNode?.insertBefore(child.cloneNode(true), node);
+        ref && this.#synthetics.add(ref);
+      });
+      if (trim) node.textContent = '';
     }
   }
 }

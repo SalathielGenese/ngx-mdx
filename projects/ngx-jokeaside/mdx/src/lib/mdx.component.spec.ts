@@ -16,15 +16,11 @@ describe('MdxComponent', () => {
       <article ngx-jokeaside-mdx>
         # How {{ name }} works!
 
-        This explains how to setup and work with {{ name }}!
+        This explains how to set up and work with {{ name }}!
       </article>`
   })
-  class WithMdxComponent implements OnInit {
+  class WithMdxComponent {
     name = 'mdx';
-
-    ngOnInit() {
-      setTimeout(() => this.name = 'MDX', 3_000);
-    }
   }
 
   beforeEach(async () => {
@@ -39,9 +35,19 @@ describe('MdxComponent', () => {
   });
 
   it('template should contain "mdx works" text', async () => {
-    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain('How mdx works!');
-    await new Promise(resolve => setTimeout(resolve, 3_000));
+    expect((fixture.elementRef.nativeElement as HTMLElement).querySelector('article')?.innerHTML).toBe([
+        `<h1>How ${component.name} works!</h1>`,
+        `<p>This explains how to set up and work with ${component.name}!</p>`,
+        '\n'
+      ].join(''));
+
+    component.name = 'MDX';
     fixture.detectChanges();
-    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain('How MDX works!');
+
+    expect((fixture.elementRef.nativeElement as HTMLElement).querySelector('article')?.innerHTML).toBe([
+      `<h1>How ${component.name} works!</h1>`,
+      `<p>This explains how to set up and work with ${component.name}!</p>`,
+      '\n'
+    ].join(''));
   });
 });
