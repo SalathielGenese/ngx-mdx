@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {MdxComponent} from './mdx.component';
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 
 describe('MdxComponent', () => {
