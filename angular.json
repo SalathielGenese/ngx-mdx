@@ -7,23 +7,23 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "@ngx-jokeaside/mdx": {
+    "ngx-mdx": {
       "projectType": "library",
-      "root": "projects/ngx-jokeaside/mdx",
-      "sourceRoot": "projects/ngx-jokeaside/mdx/src",
+      "root": "projects/ngx-mdx",
+      "sourceRoot": "projects/ngx-mdx/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/ngx-jokeaside/mdx/ng-package.json"
+            "project": "projects/ngx-mdx/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-jokeaside/mdx/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-mdx/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ngx-jokeaside/mdx/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-mdx/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -31,7 +31,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/ngx-jokeaside/mdx/tsconfig.spec.json",
+            "tsConfig": "projects/ngx-mdx/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

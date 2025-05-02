@@ -4,8 +4,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@ngx-jokeaside/mdx": [
-        "./dist/ngx-jokeaside/mdx"
+      "mdx": [
+        "./dist/mdx"
       ]
     },
     "outDir": "./dist/out-tsc",

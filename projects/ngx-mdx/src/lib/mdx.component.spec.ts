@@ -13,7 +13,7 @@ describe('MdxComponent', () => {
     imports: [MdxComponent],
     preserveWhitespaces: true,
     template: `
-      <article ngx-jokeaside-mdx>
+      <article ngx-mdx>
         # How {{ name }} works!
 
         This explains how to set up and work with {{ name }}!

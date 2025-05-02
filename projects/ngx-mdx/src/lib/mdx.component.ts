@@ -4,7 +4,7 @@ import dedent from 'dedent';
 
 
 @Component({
-  selector: '[ngx-jokeaside-mdx], ngx-jokeaside-mdx',
+  selector: '[ngx-mdx], ngx-mdx',
   template: `
     <ng-content></ng-content>`,
 })
