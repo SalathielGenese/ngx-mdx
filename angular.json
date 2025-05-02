@@ -3,7 +3,10 @@
   "version": 1,
   "cli": {
     "packageManager": "pnpm",
-    "analytics": "04c69583-324a-4d5f-92c6-4a6379a5aa84"
+    "analytics": "04c69583-324a-4d5f-92c6-4a6379a5aa84",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -11,7 +14,7 @@
       "projectType": "library",
       "root": "projects/ngx-mdx",
       "sourceRoot": "projects/ngx-mdx/src",
-      "prefix": "lib",
+      "prefix": "ngx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -36,6 +39,16 @@
               "zone.js",
               "zone.js/testing"
             ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-mdx/**/*.ts",
+              "projects/ngx-mdx/**/*.html"
+            ],
+            "eslintConfig": "projects/ngx-mdx/eslint.config.js"
           }
         }
       }
