@@ -11,9 +11,12 @@ describe('MdxComponent', () => {
   @Component({
     selector: 'with-mdx',
     imports: [MdxComponent],
+    preserveWhitespaces: true,
     template: `
       <article ngx-jokeaside-mdx>
-        # {{ name }} works!
+        # How {{ name }} works!
+
+        This explains how to setup and work with {{ name }}!
       </article>`
   })
   class WithMdxComponent implements OnInit {
@@ -36,9 +39,9 @@ describe('MdxComponent', () => {
   });
 
   it('template should contain "mdx works" text', async () => {
-    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain(' # mdx works! ');
+    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain('How mdx works!');
     await new Promise(resolve => setTimeout(resolve, 3_000));
     fixture.detectChanges();
-    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain(' # MDX works! ');
+    expect((fixture.elementRef.nativeElement as HTMLElement).outerHTML).toContain('How MDX works!');
   });
 });
