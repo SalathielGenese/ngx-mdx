@@ -4,7 +4,7 @@ import dedent from 'dedent';
 
 
 @Component({
-  selector: '[ngx-mdx], ngx-mdx',
+  selector: 'ngx-mdx, [ngx-mdx]',
   template: `
     <ng-content></ng-content>`,
 })
@@ -35,7 +35,7 @@ export class MdxComponent implements AfterViewInit, AfterViewChecked {
       this.renderer.setProperty(temporary, 'innerHTML', `${parse(dedent(node.textContent ?? ''))}`);
       temporary.childNodes.forEach(child => {
         const ref = node?.parentNode?.insertBefore(child.cloneNode(true), node);
-        ref && this.#synthetics.add(ref);
+        if(ref) this.#synthetics.add(ref);
       });
       if (trim) node.textContent = '';
     }

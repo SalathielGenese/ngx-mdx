@@ -9,8 +9,8 @@ describe('MdxComponent', () => {
   let fixture: ComponentFixture<WithMdxComponent>;
 
   @Component({
-    selector: 'with-mdx',
     imports: [MdxComponent],
+    selector: 'ngx-with-mdx',
     preserveWhitespaces: true,
     template: `
       <article ngx-mdx>
