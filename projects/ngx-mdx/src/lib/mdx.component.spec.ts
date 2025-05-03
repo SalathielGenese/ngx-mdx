@@ -5,6 +5,7 @@ import {Component} from '@angular/core';
 
 
 describe('MdxComponent', () => {
+  let container: HTMLElement;
   let component: WithMdxComponent;
   let fixture: ComponentFixture<WithMdxComponent>;
 
@@ -28,14 +29,23 @@ describe('MdxComponent', () => {
     fixture = TestBed.createComponent(WithMdxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    container = (fixture.elementRef.nativeElement as HTMLElement).querySelector('article')!;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should remove original Markdown markers', () => {
+    expect(container).not.toContain('# How mdx works!');
+    expect(container).not.toContain('# How {{ name }} works!');
+    expect(container).not.toContain('This explains how to set up and work with mdx!');
+    expect(container).not.toContain('This explains how to set up and work with {{ name }}!');
+  });
+
   it('DOM should contain "mdx works" text', async () => {
-    expect((fixture.elementRef.nativeElement as HTMLElement).querySelector('article')?.innerHTML).toBe([
+    expect(container.innerHTML).toBe([
         `<h1>How ${component.name} works!</h1>`,
         `<p>This explains how to set up and work with ${component.name}!</p>`,
         '\n'
@@ -44,7 +54,7 @@ describe('MdxComponent', () => {
     component.name = 'MDX';
     fixture.detectChanges();
 
-    expect((fixture.elementRef.nativeElement as HTMLElement).querySelector('article')?.innerHTML).toBe([
+    expect(container.innerHTML).toBe([
       `<h1>How ${component.name} works!</h1>`,
       `<p>This explains how to set up and work with ${component.name}!</p>`,
       '\n'
