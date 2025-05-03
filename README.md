@@ -1,59 +1,54 @@
-# NgxJokeaside
+# `ngx-mdx`
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+React vibrant ecosystem makes Markdown integration seamless with MDX.
+So this project is all about bringing a similar experience to Angular,
+with as less hurdle as we can.
 
-## Development server
+## Usage
 
-To start a local development server, run:
+### Install
 
-```bash
-ng serve
+```shell
+# npm install npx-mdx
+# yarn add npx-mdx
+pnpm add npx-mdx
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Import
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```typescript
+import {MdxComponent} from "ngx-mdx";
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Enjoy
 
-```bash
-ng generate --help
+```angular2html
+<article ngx-mdx>
+  # Level 1 Title
+  
+  ## Level 2 title
+  
+  + a
+  + list
+  + of
+  + items
+  
+  You can even _emphasize_ some **bold statement**.
+  
+  <my-hero></my-hero>
+</article>
 ```
 
-## Building
+> **NOTE:** Anything rendered under `<my-hero></my-hero>` will not be accounted for.
 
-To build the project run:
 
-```bash
-ng build
-```
+## Licencing
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This project is delivered under MIT Licence.
 
-## Running unit tests
+## Contributing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+You are encouraged to:
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
++ Open issues, with your Angular/ngx-mdx versions
++ Fork this repository and submit feature requests
