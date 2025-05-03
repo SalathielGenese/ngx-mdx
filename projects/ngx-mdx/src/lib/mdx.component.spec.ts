@@ -17,7 +17,7 @@ describe('MdxComponent', () => {
       <article ngx-mdx>
         # How {{ name }} works!
 
-        This explains how to set up and work with {{ name }}!
+        This explains how to **set up** and _work with_ {{ name }}!
       </article>`
   })
   class WithMdxComponent {
@@ -47,7 +47,7 @@ describe('MdxComponent', () => {
   it('should render markdown text', async () => {
     expect(container.innerHTML.trim()).toBe([
       `<h1>How ${component.name} works!</h1>`,
-      `<p>This explains how to set up and work with ${component.name}!</p>`,
+      `<p>This explains how to <strong>set up</strong> and <em>work with</em> ${component.name}!</p>`,
     ].join(''));
   });
 
@@ -57,7 +57,7 @@ describe('MdxComponent', () => {
 
     expect(container.innerHTML.trim()).toBe([
       `<h1>How ${component.name} works!</h1>`,
-      `<p>This explains how to set up and work with ${component.name}!</p>`,
+      `<p>This explains how to <strong>set up</strong> and <em>work with</em> ${component.name}!</p>`,
     ].join(''));
   });
 });
