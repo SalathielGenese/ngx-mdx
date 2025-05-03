@@ -34,7 +34,7 @@ describe('MdxComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('template should contain "mdx works" text', async () => {
+  it('DOM should contain "mdx works" text', async () => {
     expect((fixture.elementRef.nativeElement as HTMLElement).querySelector('article')?.innerHTML).toBe([
         `<h1>How ${component.name} works!</h1>`,
         `<p>This explains how to set up and work with ${component.name}!</p>`,
