@@ -44,20 +44,20 @@ describe('MdxComponent', () => {
     expect(container).not.toContain('This explains how to set up and work with {{ name }}!');
   });
 
-  it('DOM should contain "mdx works" text', async () => {
-    expect(container.innerHTML).toBe([
-        `<h1>How ${component.name} works!</h1>`,
-        `<p>This explains how to set up and work with ${component.name}!</p>`,
-        '\n'
-      ].join(''));
+  it('should render markdown text', async () => {
+    expect(container.innerHTML.trim()).toBe([
+      `<h1>How ${component.name} works!</h1>`,
+      `<p>This explains how to set up and work with ${component.name}!</p>`,
+    ].join(''));
+  });
 
+  it('should update rendered markdown text when Angular re-renders', async () => {
     component.name = 'MDX';
     fixture.detectChanges();
 
-    expect(container.innerHTML).toBe([
+    expect(container.innerHTML.trim()).toBe([
       `<h1>How ${component.name} works!</h1>`,
       `<p>This explains how to set up and work with ${component.name}!</p>`,
-      '\n'
     ].join(''));
   });
 });
