@@ -1,6 +1,6 @@
 # `ngx-mdx`
 
-React vibrant ecosystem makes Markdown integration seamless with MDX.
+The React vibrant ecosystem makes Markdown integration seamless with MDX.
 So this project is all about bringing a similar experience to Angular,
 with as less hurdle as we can.
 
@@ -14,32 +14,67 @@ with as less hurdle as we can.
 pnpm add npx-mdx
 ```
 
-### Import
+### API
 
-```typescript
-import {MdxComponent} from "ngx-mdx";
-```
+`ngx-mdx` exposes:
 
-### Enjoy
++ one component:
+  + ```typescript
+    // Component Selectors: ngx-mdx, ngxMdx
+    import {MdxComponent} from "ngx-mdx";
+    ```
++ two directives:
+  + ```typescript
+    // Directive Selectors: [ngx-mdx-ignore], [ngxMdxIgnore]
+    import {MdxIgnoreDirective} from "ngx-mdx";
+    
+    // Useful to ignore a DOM tree starting on the node it is applied on.
+    ```
+  + ```typescript
+    // Directive Selectors: [ngx-mdx-inline], [ngxMdxInline]
+    import {MdxIgnoreDirective} from "ngx-mdx";
+    ```
+
+### Templating
 
 ```angular2html
-<article ngx-mdx>
-  # Level 1 Title
-  
-  ## Level 2 title
-  
-  + a
-  + list
-  + of
-  + items
-  
-  You can even _emphasize_ some **bold statement**.
-  
-  <my-hero></my-hero>
-</article>
+<!-- Input -->
+<article ngx-mdx>Hello **world**!</article>
+
+<!-- Output -->
+<article><p>Hello <strong>world</strong>!</p></article>
 ```
 
-> **NOTE:** Anything rendered under `<my-hero></my-hero>` will not be accounted for.
+Markdown in nested DOM:
+```angular2html
+<!-- Input -->
+<article ngx-mdx>Hello <a href="#">dancing **world**</a>!</article>
+
+<!-- Output -->
+<article><p>Hello </p><a href="#"><p>dancing <strong>world</strong></p></a><p>!</p></article>
+```
+
+> **NOTE:** You may have noticed those extract `<p>` tags.
+> You can inline the rendering and rid of them...
+> 
+> It works on ngx-mdx hosts:
+> ```angular2html
+> <!-- Input -->
+> <article ngx-mdx ngx-mdx-inline>Hello **world**!</article>
+>
+> <!-- Output -->
+> <article>Hello <strong>world</strong>!</article>
+> ```
+>
+> 
+> But also when Markdown in nested DOM:
+> ```angular2html
+> <!-- Input -->
+> <article ngx-mdx>Hello <a href="#" ngx-mdx-inline>dancing **world**</a>!</article>
+>
+> <!-- Output -->
+> <article><p>Hello </p><a href="#">dancing <strong>world</strong></a><p>!</p></article>
+> ```
 
 
 ## Licencing
