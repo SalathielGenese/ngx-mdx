@@ -65,6 +65,27 @@ describe('MdxComponent', () => {
     const fixture = await render(SuperTestComponent);
     expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A friendly</p>\n<ngx-test><span>hello **World**</span></ngx-test><p>!</p>\n');
   });
+
+  it('should stop on tree nodes when component boundary is auto detected', async () => {
+    @Component({
+      template: `
+        <ng-content></ng-content>`,
+      selector: 'ngx-test',
+    })
+    class TestComponent {
+    }
+    @Component({
+      template: `
+        <article ngxMdx>A friendly <ngx-test>hello **World**</ngx-test>!</article>`,
+      imports: [MdxComponent, TestComponent],
+      selector: 'ngx-super-test',
+    })
+    class SuperTestComponent {
+    }
+
+    const fixture = await render(SuperTestComponent);
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A friendly</p>\n<ngx-test><p>hello <strong>World</strong></p>\n</ngx-test><p>!</p>\n');
+  });
 });
 
 // TODO: try detecting inlining on ndxMdx host element (that'd be awesome)
