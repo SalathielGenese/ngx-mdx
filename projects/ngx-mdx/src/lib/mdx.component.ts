@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ContentChildren, ElementRef, QueryList, Renderer2} from '@angular/core';
+import {AfterViewChecked, Component, ContentChildren, ElementRef, Optional, QueryList, Renderer2} from '@angular/core';
 import {MdxIgnoreDirective} from './mdx-ignore.directive';
 import {MdxInlineDirective} from './mdx-inline.directive';
 import {parse} from 'marked';
@@ -19,7 +19,8 @@ export class MdxComponent implements AfterViewChecked {
   private inlined!: QueryList<ElementRef<HTMLElement>>;
 
   constructor(private readonly renderer: Renderer2,
-              private readonly rootRef: ElementRef<HTMLElement>) {
+              private readonly rootRef: ElementRef<HTMLElement>,
+              @Optional() private readonly inlineRef?: MdxInlineDirective) {
   }
 
   ngAfterViewChecked() {
@@ -29,7 +30,9 @@ export class MdxComponent implements AfterViewChecked {
     }
 
     const {nativeElement: root} = this.rootRef;
-    for (const [node, inlineContext] of this.#collectTextNodesOfInterest(root, this.#getNgContext(root)!)) {
+    const targets = this.#collectTextNodesOfInterest(root, this.#getNgContext(root)!, !!this.inlineRef);
+
+    for (const [node, inlineContext] of targets) {
       const temporary: HTMLDivElement = this.renderer.createElement('div');
       this.renderer.setProperty(temporary, 'innerHTML', `${parse(dedent(node.textContent ?? ''))}`);
 
