@@ -16,4 +16,18 @@ describe('MdxInlineDirective', () => {
     const fixture = await render(TestComponent);
     expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p><em>Hello</em></p>\n<button ngxmdxignore="">**World**</button><p>!</p>\n');
   });
+
+  it('should ignore ignore directive of root ngxMdx', async () => {
+    @Component({
+      template: `
+        <article ngxMdx ngxMdxIgnore>_Hello_ **World**!</article>`,
+      imports: [MdxComponent, MdxIgnoreDirective],
+      selector: 'ngx-test',
+    })
+    class TestComponent {
+    }
+
+    const fixture = await render(TestComponent);
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p><em>Hello</em> <strong>World</strong>!</p>\n');
+  });
 });
