@@ -17,6 +17,18 @@ describe('MdxInlineDirective', () => {
     const fixture = await render(TestComponent);
     expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href=\"#\" ngxmdxinline="">friendly hello <strong>World</strong></a><p>!</p>\n');
   });
-});
 
-// TODO: try detecting inlining on ndxMdx host element (that'd be awesome)
+  it('should account for ngxMdxInline on ngxMdx root element', async () => {
+    @Component({
+      template: `
+        <article ngxMdx ngxMdxInline>A friendly hello **World**!</article>`,
+      imports: [MdxComponent, MdxInlineDirective],
+      selector: 'ngx-test',
+    })
+    class TestComponent {
+    }
+
+    const fixture = await render(TestComponent);
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('A friendly hello <strong>World</strong>!');
+  });
+});
