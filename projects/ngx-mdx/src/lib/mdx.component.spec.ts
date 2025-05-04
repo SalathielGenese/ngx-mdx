@@ -86,6 +86,23 @@ describe('MdxComponent', () => {
     const fixture = await render(SuperTestComponent);
     expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A friendly</p>\n<ngx-test><p>hello <strong>World</strong></p>\n</ngx-test><p>!</p>\n');
   });
-});
 
-// TODO: try detecting inlining on ndxMdx host element (that'd be awesome)
+  it('should update rendered DOM after view change', async () => {
+    @Component({
+      template: `
+        <article ngxMdx>A friendly **{{ name }}**!</article>`,
+      imports: [MdxComponent],
+      selector: 'ngx-super-test',
+      preserveWhitespaces: true,
+    })
+    class TestComponent {
+      name = 'World';
+    }
+
+    const fixture = await render(TestComponent);
+    fixture.componentInstance.name = 'Johannesburg By Night';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.children[0].innerHTML).toBe('<p>A friendly <strong>Johannesburg By Night</strong>!</p>\n');
+  });
+});
