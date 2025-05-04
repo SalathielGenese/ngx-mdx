@@ -10,5 +10,6 @@ export async function render<T>(component: Type<T>): Promise<ComponentFixture<T>
 
 describe('no', () => {
   it('op', () => {
+    expect(1+1).toBe(2);
   });
 });

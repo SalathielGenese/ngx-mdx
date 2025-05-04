@@ -42,7 +42,7 @@ describe('MdxComponent', () => {
     }
 
     const fixture = await render(TestComponent);
-    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href=\"#\"><p>friendly hello <strong>World</strong></p>\n</a><p>!</p>\n');
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href="#"><p>friendly hello <strong>World</strong></p>\n</a><p>!</p>\n');
   });
 
   it('should stop on tree nodes when component boundary is auto detected', async () => {

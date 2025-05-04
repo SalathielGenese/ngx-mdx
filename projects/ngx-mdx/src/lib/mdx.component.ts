@@ -49,6 +49,8 @@ export class MdxComponent implements AfterViewChecked {
   }
 
   #collectTextNodesOfInterest(node: Node, rootNgContext: number, inlineContext = false): [Node, boolean][] {
+    let childInlineContext: boolean;
+
     switch (node.nodeType) {
       case Node.TEXT_NODE:
         return node.textContent?.trim() ? [[node, inlineContext]] : [];
@@ -60,7 +62,7 @@ export class MdxComponent implements AfterViewChecked {
           return childNgContext && rootNgContext !== childNgContext;
         })) return [];
 
-        const childInlineContext = inlineContext || this.inlined.some(ref => ref.nativeElement === node);
+        childInlineContext = inlineContext || this.inlined.some(ref => ref.nativeElement === node);
         return [...node.childNodes].reduce((tracker, child) => {
           return [...tracker, ...this.#collectTextNodesOfInterest(child, rootNgContext, childInlineContext)];
         }, [] as [Node, boolean][]);
@@ -78,6 +80,6 @@ export class MdxComponent implements AfterViewChecked {
   }
 
   #getNgContext(node: Node): number | undefined {
-    return (node as any).__ngContext__;
+    return (node as unknown as {__ngContext__?: number}).__ngContext__;
   }
 }

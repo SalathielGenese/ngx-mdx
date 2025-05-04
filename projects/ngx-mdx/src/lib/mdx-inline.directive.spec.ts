@@ -15,7 +15,7 @@ describe('MdxInlineDirective', () => {
     }
 
     const fixture = await render(TestComponent);
-    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href=\"#\" ngxmdxinline="">friendly hello <strong>World</strong></a><p>!</p>\n');
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href="#" ngxmdxinline="">friendly hello <strong>World</strong></a><p>!</p>\n');
   });
 
   it('should account for ngxMdxInline on ngxMdx root element', async () => {
