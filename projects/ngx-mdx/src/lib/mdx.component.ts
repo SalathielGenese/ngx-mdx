@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, contentChildren, ElementRef, Renderer2} from '@angular/core';
+import {AfterViewChecked, Component, ContentChildren, ElementRef, QueryList, Renderer2} from '@angular/core';
 import {MdxIgnoreDirective} from './mdx-ignore.directive';
 import {MdxInlineDirective} from './mdx-inline.directive';
 import {parse} from 'marked';
@@ -12,8 +12,11 @@ import dedent from 'dedent';
 })
 export class MdxComponent implements AfterViewChecked {
   readonly #synthetics = new Set<Node>();
-  private readonly ignored = contentChildren(MdxIgnoreDirective, {descendants: true, read: ElementRef});
-  private readonly inlined = contentChildren(MdxInlineDirective, {descendants: true, read: ElementRef});
+
+  @ContentChildren(MdxIgnoreDirective, {read: ElementRef, descendants: true})
+  private ignored!: QueryList<ElementRef<HTMLElement>>;
+  @ContentChildren(MdxInlineDirective, {read: ElementRef, descendants: true})
+  private inlined!: QueryList<ElementRef<HTMLElement>>;
 
   constructor(private readonly renderer: Renderer2,
               private readonly rootRef: ElementRef<HTMLElement>) {
@@ -30,8 +33,8 @@ export class MdxComponent implements AfterViewChecked {
       const temporary: HTMLDivElement = this.renderer.createElement('div');
       this.renderer.setProperty(temporary, 'innerHTML', `${parse(dedent(node.textContent ?? ''))}`);
 
-      const children = inlineContext && this.#isInlineCandidate(node.childNodes)
-        ? temporary.childNodes[0].childNodes
+      const children = inlineContext && this.#isInlineCandidate(temporary.childNodes)
+        ? temporary.children[0].childNodes
         : temporary.childNodes;
       children.forEach(child => {
         const ref = node?.parentNode?.insertBefore(child.cloneNode(true), node);
@@ -47,14 +50,14 @@ export class MdxComponent implements AfterViewChecked {
       case Node.TEXT_NODE:
         return node.textContent?.trim() ? [[node, inlineContext]] : [];
       case Node.ELEMENT_NODE:
-        if (this.ignored().some(ref => ref.nativeElement === node)) return [];
+        if (this.ignored.some(ref => ref.nativeElement === node)) return [];
 
         if ([...node.childNodes].some(child => {
           const childNgContext = this.#getNgContext(child);
           return childNgContext && rootNgContext !== childNgContext;
         })) return [];
 
-        const childInlineContext = inlineContext || this.inlined().some(ref => ref.nativeElement === node);
+        const childInlineContext = inlineContext || this.inlined.some(ref => ref.nativeElement === node);
         return [...node.childNodes].reduce((tracker, child) => {
           return [...tracker, ...this.#collectTextNodesOfInterest(child, rootNgContext, childInlineContext)];
         }, [] as [Node, boolean][]);
