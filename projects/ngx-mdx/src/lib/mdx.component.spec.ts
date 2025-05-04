@@ -1,14 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {render} from './render.fixture.spec';
 import {MdxComponent} from './mdx.component';
-import {Component, Type} from '@angular/core';
-
-async function render<T>(component: Type<T>): Promise<ComponentFixture<T>> {
-  await TestBed.configureTestingModule({imports: [component]}).compileComponents();
-  const fixture = TestBed.createComponent(component);
-  fixture.detectChanges();
-  return fixture;
-}
+import {Component} from '@angular/core';
 
 describe('MdxComponent', () => {
   it('should remove original text node with markdown', async () => {
