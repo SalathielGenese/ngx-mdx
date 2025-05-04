@@ -24,4 +24,20 @@ describe('MdxComponent', () => {
     const fixture = await render(TestComponent);
     expect(fixture.nativeElement.outerHTML).not.toContain('Hello **Word**!');
   });
+
+  it('should replace with markdown processed text', async () => {
+    @Component({
+      template: `
+        <article ngxMdx>Hello **Word**!</article>`,
+      imports: [MdxComponent],
+      selector: 'ngx-test',
+    })
+    class TestComponent {
+    }
+
+    const fixture = await render(TestComponent);
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>Hello <strong>Word</strong>!</p>\n');
+  });
 });
+
+// TODO: try detecting inlining on ndxMdx host element (that'd be awesome)
