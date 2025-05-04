@@ -1,7 +1,6 @@
+import {MdxComponent, MdxIgnoreDirective} from '../public-api';
 import {render} from './render.fixture.spec';
-import {MdxComponent} from './mdx.component';
 import {Component} from '@angular/core';
-import {MdxIgnoreDirective} from './mdx-ignore.directive';
 
 describe('MdxInlineDirective', () => {
   it('should remove original text node with markdown', async () => {

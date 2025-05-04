@@ -1,5 +1,5 @@
 import {render} from './render.fixture.spec';
-import {MdxComponent} from './mdx.component';
+import {MdxComponent} from '../public-api';
 import {Component} from '@angular/core';
 
 describe('MdxComponent', () => {
