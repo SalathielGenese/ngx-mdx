@@ -14,7 +14,7 @@ describe('MdxComponent', () => {
   it('should remove original text node with markdown', async () => {
     @Component({
       template: `
-        <article ngxMdx>Hello **Word**!</article>`,
+        <article ngxMdx>Hello **World**!</article>`,
       imports: [MdxComponent],
       selector: 'ngx-test',
     })
@@ -22,13 +22,13 @@ describe('MdxComponent', () => {
     }
 
     const fixture = await render(TestComponent);
-    expect(fixture.nativeElement.outerHTML).not.toContain('Hello **Word**!');
+    expect(fixture.nativeElement.outerHTML).not.toContain('Hello **World**!');
   });
 
   it('should replace with markdown processed text', async () => {
     @Component({
       template: `
-        <article ngxMdx>Hello **Word**!</article>`,
+        <article ngxMdx>Hello **World**!</article>`,
       imports: [MdxComponent],
       selector: 'ngx-test',
     })
@@ -36,7 +36,21 @@ describe('MdxComponent', () => {
     }
 
     const fixture = await render(TestComponent);
-    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>Hello <strong>Word</strong>!</p>\n');
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>Hello <strong>World</strong>!</p>\n');
+  });
+
+  it('should replace with markdown processed text, even in nested HTML element', async () => {
+    @Component({
+      template: `
+        <article ngxMdx>A <a href="#">friendly hello **World**</a>!</article>`,
+      imports: [MdxComponent],
+      selector: 'ngx-test',
+    })
+    class TestComponent {
+    }
+
+    const fixture = await render(TestComponent);
+    expect(fixture.nativeElement.childNodes[0].innerHTML).toBe('<p>A</p>\n<a href=\"#\"><p>friendly hello <strong>World</strong></p>\n</a><p>!</p>\n');
   });
 });
 
