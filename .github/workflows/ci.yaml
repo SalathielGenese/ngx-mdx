@@ -1,8 +1,10 @@
-name: CI Pipeline
+name: Lint, Test, Build, Eventually publish
 
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*.*.*'
   pull_request:
     branches: [ main ]
 
@@ -20,7 +22,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       # Run tests and generate coverage
-      - name: Test
+      - name: Build & Test
         run: |
           docker build --tag ngx-mdx .
 
@@ -28,6 +30,18 @@ jobs:
             --volume "$PWD:/opt/tmp" \
             --user "$(id -u):$(id -g)" \
             ngx-mdx cp --recursive /opt/app/coverage /opt/tmp
+          docker run --rm \
+            --volume "$PWD:/opt/tmp" \
+            --user "$(id -u):$(id -g)" \
+            ngx-mdx cp --recursive /opt/app/dist /opt/tmp
+
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          if [[ "$VERSION" =~ ^(0|[1-9]\d*)+\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[a-zA-Z0-9_+-]*)?$ ]]; then
+            echo "VERSION=v$VERSION" >> $GITHUB_ENV
+            tar -cvzf "ngx-mdx-v$VERSION.tar.gz" dist/ngx-mdx
+          else
+            echo "[WARNING] No semantic versioning tag found." >&2
+          fi
 
       # Export code coverage statistics
       - name: Upload coverage reports to Codecov
@@ -36,3 +50,25 @@ jobs:
           files: ./coverage/ngx-mdx/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
           name: ngx-mdx
+
+      # Eventually release it as an archive for those interested
+      - name: Release
+        if: ${{ env.VERSION }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./ngx-mdx-${{ env.VERSION }}.tar.gz
+          tag_name: ${{ env.VERSION }}
+          generate_release_notes: true
+          prerelease: false
+          draft: false
+
+      # Publish to npm registry
+      - name: Publish
+        if: ${{ env.VERSION }}
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --env "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" \
+            --workdir /opt/app/dist/ngx-mdx ngx-mdx sh -c \
+            'pnpm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN && pnpm publish --access public'
