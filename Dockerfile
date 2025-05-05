@@ -8,7 +8,5 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm lint
-RUN pnpm test --coverage
+RUN pnpm test --json --coverage --outputFile coverage/ngx-mdx.json
 RUN pnpm build
-
-RUN cd dist/ngx-mdx
