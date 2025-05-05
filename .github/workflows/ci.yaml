@@ -24,10 +24,9 @@ jobs:
         run: |
           docker build --tag ngx-mdx .
 
-          mkdir coverage
           docker run --rm \
+            --volume "$PWD:/opt/tmp" \
             --user "$(id -u):$(id -g)" \
-            --volume "$PWD/coverage:/opt/tmp" \
             ngx-mdx cp --recursive /opt/app/coverage /opt/tmp
 
       # Run tests and generate coverage
