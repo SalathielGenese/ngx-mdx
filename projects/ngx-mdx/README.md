@@ -49,7 +49,7 @@ pnpm add npx-mdx
 
 ### Templating
 
-```angular2html
+```html
 <!-- Input -->
 <article ngx-mdx>Hello **world**!</article>
 
@@ -58,7 +58,7 @@ pnpm add npx-mdx
 ```
 
 Markdown in nested DOM:
-```angular2html
+```html
 <!-- Input -->
 <article ngx-mdx>Hello <a href="#">dancing **world**</a>!</article>
 
@@ -70,7 +70,7 @@ Markdown in nested DOM:
 > You can inline the rendering and rid of them...
 >
 > It works on ngx-mdx hosts:
-> ```angular2html
+> ```html
 > <!-- Input -->
 > <article ngx-mdx ngx-mdx-inline>Hello **world**!</article>
 >
@@ -80,7 +80,7 @@ Markdown in nested DOM:
 >
 >
 > But also when Markdown in nested DOM:
-> ```angular2html
+> ```html
 > <!-- Input -->
 > <article ngx-mdx>Hello <a href="#" ngx-mdx-inline>dancing **world**</a>!</article>
 >
