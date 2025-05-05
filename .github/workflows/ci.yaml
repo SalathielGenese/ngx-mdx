@@ -61,8 +61,8 @@ jobs:
       - name: Create coverage badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          color: ${{ steps.coverage.outputs.percentage >= 95 && 'green' || steps.coverage.outputs.percentage >= 75 && 'yellow' || 'red' }}
-          message: ${{ steps.coverage.outputs.percentage }}%
+          color: ${{ steps.extract.outputs.percentage >= 95 && 'green' || steps.extract.outputs.percentage >= 75 && 'yellow' || 'red' }}
+          message: ${{ steps.extract.outputs.percentage }}%
           gistID: 1644dcbb7db5112baf85c626541dd958
           auth: ${{ secrets.GIST_SECRET }}
           filename: coverage.json
