@@ -29,54 +29,10 @@ jobs:
             --user "$(id -u):$(id -g)" \
             ngx-mdx cp --recursive /opt/app/coverage /opt/tmp
 
-      # Run tests and generate coverage
-      - name: Extract test report, coverage and export test stats
-        id: extract
-        run: |
-          TOTAL_STATEMENTS=0
-          COVERED_STATEMENTS=0
-          for file in $(jq -r 'keys[]' coverage/ngx-mdx/coverage-final.json); do
-            STATEMENTS=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/ngx-mdx/coverage-final.json | wc -l)
-            COVERED=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/ngx-mdx/coverage-final.json | awk '{s+=$1} END {print s}')
-            TOTAL_STATEMENTS=$((TOTAL_STATEMENTS + STATEMENTS))
-            COVERED_STATEMENTS=$((COVERED_STATEMENTS + COVERED))
-          done
-          if [ $TOTAL_STATEMENTS -eq 0 ]; then
-            PERCENTAGE=0
-          else
-            PERCENTAGE=$(echo "scale=2; ($COVERED_STATEMENTS * 100) / $TOTAL_STATEMENTS" | bc)
-          fi
-          echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
-          echo "total=$(jq '.numTotalTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
-          echo "passing=$(jq '.numPassedTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
-
-      # Store coverage artifacts
-      - name: Archive coverage results
-        uses: actions/upload-artifact@v4
+      # Export code coverage statistics
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          path: coverage/ngx-mdx/
-          name: coverage-report
-
-      # Generate coverage badge
-      - name: Create coverage badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
-        with:
-          color: ${{ steps.extract.outputs.percentage >= 95 && 'green' || steps.extract.outputs.percentage >= 75 && 'yellow' || 'red' }}
-          message: ${{ steps.extract.outputs.percentage }}%
-          gistID: 1644dcbb7db5112baf85c626541dd958
-          auth: ${{ secrets.GIST_SECRET }}
-          filename: coverage.json
-          label: Coverage
-          namedLogo: jest
-
-      # Generate test stats badge
-      - name: Create test stats badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
-        with:
-          color: ${{ steps.extract.outputs.passing == steps.extract.outputs.total && 'green' || 'red' }}
-          message: ${{ steps.extract.outputs.passing }}/${{ steps.extract.outputs.total }}
-          gistID: 1644dcbb7db5112baf85c626541dd958
-          auth: ${{ secrets.GIST_SECRET }}
-          filename: test-stats.json
-          namedLogo: jest
-          label: Tests
+          files: ./coverage/ngx-mdx/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: ngx-mdx

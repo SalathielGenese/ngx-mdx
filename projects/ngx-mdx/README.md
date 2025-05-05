@@ -6,8 +6,15 @@ with as less hurdle as we can.
 
 ## Status
 
-![Coverage](https://gist.githubusercontent.com/SalathielGenese/1644dcbb7db5112baf85c626541dd958/raw/coverage.json)
-![Tests](https://gist.githubusercontent.com/SalathielGenese/1644dcbb7db5112baf85c626541dd958/raw/test-stats.json)
+![Current version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSalathielGenese%2Fngx-mdx%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.version&label=version)
+![NPM Downloads](https://img.shields.io/npm/dw/ngx-mdx)
+![Codecov](https://img.shields.io/codecov/c/github/SalathielGenese/ngx-mdx)
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/SalathielGenese/ngx-mdx)
+![GitHub contributors](https://img.shields.io/github/contributors/SalathielGenese/ngx-mdx)
+![GitHub Sponsors](https://img.shields.io/github/sponsors/SalathielGenese)
+
+
 
 ## Usage
 
@@ -82,9 +89,12 @@ Markdown in nested DOM:
 > ```
 
 
+
 ## Licencing
 
 This project is delivered under MIT Licence.
+
+
 
 ## Contributing
 
