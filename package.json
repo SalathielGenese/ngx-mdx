@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "test": "jest",
+    "lint": "ng lint",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "lint": "ng lint",
-    "test": "jest"
+    "watch": "ng build --watch --configuration development"
   },
   "private": true,
   "dependencies": {
