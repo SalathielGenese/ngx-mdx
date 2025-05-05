@@ -1,0 +1,66 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Run tests and generate coverage
+      - name: Test, extract test report, coverage and export test stats
+        id: test
+        run: |
+          docker build --tag ngx-mdx .
+
+          mkdir coverage
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --volume "$PWD/coverage:/opt/tmp" \
+            ngx-mdx cp --recursive /opt/app/coverage /opt/tmp
+
+          echo "total=$(jq '.numTotalTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
+          echo "passing=$(jq '.numPassedTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
+
+      # Store coverage artifacts
+      - name: Archive coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          path: coverage/ngx-mdx/
+          name: coverage-report
+
+      # Generate coverage badge
+      - name: Create coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1644dcbb7db5112baf85c626541dd958
+          filename: coverage.json
+          label: Coverage
+          message: ${{ steps.coverage.outputs.percentage }}%
+          color: ${{ steps.coverage.outputs.percentage >= 95 && 'green' || steps.coverage.outputs.percentage >= 75 && 'yellow' || 'red' }}
+          namedLogo: jest
+
+      # Generate test stats badge
+      - name: Create test stats badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          color: ${{ steps.test.outputs.passing == steps.test.outputs.total && 'green' || 'red' }}
+          message: ${{ steps.test.outputs.passing }}/${{ steps.test.outputs.total }}
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1644dcbb7db5112baf85c626541dd958
+          filename: test-stats.json
+          label: Tests
+          namedLogo: jest
