@@ -4,6 +4,11 @@ The React vibrant ecosystem makes Markdown integration seamless with MDX.
 So this project is all about bringing a similar experience to Angular,
 with as less hurdle as we can.
 
+## Status
+
+![Coverage](https://gist.githubusercontent.com/SalathielGenese/1644dcbb7db5112baf85c626541dd958/raw/coverage.json)
+![Tests](https://gist.githubusercontent.com/SalathielGenese/1644dcbb7db5112baf85c626541dd958/raw/test-stats.json)
+
 ## Usage
 
 ### Install
@@ -56,7 +61,7 @@ Markdown in nested DOM:
 
 > **NOTE:** You may have noticed those extract `<p>` tags.
 > You can inline the rendering and rid of them...
-> 
+>
 > It works on ngx-mdx hosts:
 > ```angular2html
 > <!-- Input -->
@@ -66,7 +71,7 @@ Markdown in nested DOM:
 > <article>Hello <strong>world</strong>!</article>
 > ```
 >
-> 
+>
 > But also when Markdown in nested DOM:
 > ```angular2html
 > <!-- Input -->
