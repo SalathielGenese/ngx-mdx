@@ -35,7 +35,7 @@ jobs:
         run: |
           TOTAL_STATEMENTS=0
           COVERED_STATEMENTS=0
-          for file in $(jq -r 'keys[]' coverage/coverage-final.json); do
+          for file in $(jq -r 'keys[]' coverage/ngx-mdx/coverage-final.json); do
             STATEMENTS=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/coverage-final.json | wc -l)
             COVERED=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/coverage-final.json | awk '{s+=$1} END {print s}')
             TOTAL_STATEMENTS=$((TOTAL_STATEMENTS + STATEMENTS))
@@ -49,8 +49,6 @@ jobs:
           echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
           echo "total=$(jq '.numTotalTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
           echo "passing=$(jq '.numPassedTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
-
-          echo "Secret exists: ${{ secrets.GIST_SECRET != '' }}"
 
       # Store coverage artifacts
       - name: Archive coverage results
