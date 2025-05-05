@@ -20,8 +20,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       # Run tests and generate coverage
-      - name: Test, extract test report, coverage and export test stats
-        id: test
+      - name: Test
         run: |
           docker build --tag ngx-mdx .
 
@@ -31,6 +30,24 @@ jobs:
             --volume "$PWD/coverage:/opt/tmp" \
             ngx-mdx cp --recursive /opt/app/coverage /opt/tmp
 
+      # Run tests and generate coverage
+      - name: Extract test report, coverage and export test stats
+        id: extract
+        run: |
+          TOTAL_STATEMENTS=0
+          COVERED_STATEMENTS=0
+          for file in $(jq -r 'keys[]' coverage/coverage-final.json); do
+            STATEMENTS=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/coverage-final.json | wc -l)
+            COVERED=$(jq -r ".[\"$file\"].s | to_entries | map(.value) | .[] | select(. > 0)" coverage/coverage-final.json | awk '{s+=$1} END {print s}')
+            TOTAL_STATEMENTS=$((TOTAL_STATEMENTS + STATEMENTS))
+            COVERED_STATEMENTS=$((COVERED_STATEMENTS + COVERED))
+          done
+          if [ $TOTAL_STATEMENTS -eq 0 ]; then
+            PERCENTAGE=0
+          else
+            PERCENTAGE=$(echo "scale=2; ($COVERED_STATEMENTS * 100) / $TOTAL_STATEMENTS" | bc)
+          fi
+          echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
           echo "total=$(jq '.numTotalTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
           echo "passing=$(jq '.numPassedTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
 
@@ -45,22 +62,22 @@ jobs:
       - name: Create coverage badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          auth: ${{ secrets.GIST_SECRET }}
+          color: ${{ steps.coverage.outputs.percentage >= 95 && 'green' || steps.coverage.outputs.percentage >= 75 && 'yellow' || 'red' }}
+          message: ${{ steps.coverage.outputs.percentage }}%
           gistID: 1644dcbb7db5112baf85c626541dd958
+          auth: ${{ secrets.GIST_SECRET }}
           filename: coverage.json
           label: Coverage
-          message: ${{ steps.coverage.outputs.percentage }}%
-          color: ${{ steps.coverage.outputs.percentage >= 95 && 'green' || steps.coverage.outputs.percentage >= 75 && 'yellow' || 'red' }}
           namedLogo: jest
 
       # Generate test stats badge
       - name: Create test stats badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          color: ${{ steps.test.outputs.passing == steps.test.outputs.total && 'green' || 'red' }}
-          message: ${{ steps.test.outputs.passing }}/${{ steps.test.outputs.total }}
-          auth: ${{ secrets.GIST_SECRET }}
+          color: ${{ steps.extract.outputs.passing == steps.extract.outputs.total && 'green' || 'red' }}
+          message: ${{ steps.extract.outputs.passing }}/${{ steps.extract.outputs.total }}
           gistID: 1644dcbb7db5112baf85c626541dd958
+          auth: ${{ secrets.GIST_SECRET }}
           filename: test-stats.json
-          label: Tests
           namedLogo: jest
+          label: Tests
