@@ -6,7 +6,7 @@ with as less hurdle as we can.
 
 ## Status
 
-![Current version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSalathielGenese%2Fngx-mdx%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.version&label=version)
+![Current version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSalathielGenese%2Fngx-mdx%2Frefs%2Fheads%2Fmain%2Fprojects%2Fngx-mdx%2Fpackage.json&query=%24.version&label=version)
 ![NPM Downloads](https://img.shields.io/npm/dw/ngx-mdx)
 ![Codecov](https://img.shields.io/codecov/c/github/SalathielGenese/ngx-mdx)
 
