@@ -2,8 +2,6 @@ name: Lint, Test, Build, Eventually publish
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
     branches: [ main ]
   pull_request:
     branches: [ main ]
@@ -38,12 +36,12 @@ jobs:
             --user "$(id -u):$(id -g)" \
             ngx-mdx cp --recursive /opt/app/dist /opt/tmp
 
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          if [[ "$VERSION" =~ ^(0|[1-9]\d*)+\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[a-zA-Z0-9_+-]*)?$ ]]; then
+          VERSION="$(jq -r '.version' projects/ngx-mdx/package.json)"
+          if [[ 404 == "$(curl --silent --output /dev/null --write-out "%{http_code}" 'https://www.npmjs.com/package/ngx-mdx/v/$VERSION')" ]]; then
             echo "VERSION=v$VERSION" >> $GITHUB_ENV
             tar -cvzf "ngx-mdx-v$VERSION.tar.gz" dist/ngx-mdx
           else
-            echo "[WARNING] No semantic versioning tag found." >&2
+            echo "[WARNING] Latest version - v$VERSION - already published." >&2
           fi
 
       # Export code coverage statistics
