@@ -50,6 +50,8 @@ jobs:
           echo "total=$(jq '.numTotalTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
           echo "passing=$(jq '.numPassedTests' coverage/ngx-mdx.json)" >> $GITHUB_OUTPUT
 
+          echo "Secret exists: ${{ secrets.GIST_SECRET != '' }}"
+
       # Store coverage artifacts
       - name: Archive coverage results
         uses: actions/upload-artifact@v4
