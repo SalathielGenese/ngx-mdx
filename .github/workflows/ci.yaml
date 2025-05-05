@@ -71,7 +71,6 @@ jobs:
         if: ${{ env.VERSION }}
         run: |
           docker run --rm \
-            --user "$(id -u):$(id -g)" \
             --env "NPM_TOKEN=${{ secrets.NPM_TOKEN }}" \
             --workdir /opt/app/dist/ngx-mdx ngx-mdx sh -c \
             'pnpm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN && pnpm publish --access public'
